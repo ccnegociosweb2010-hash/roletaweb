@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Registrar Presença</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>body{font-family:Arial;padding:20px;text-align:center} .box{max-width:520px;margin:auto;padding:20px;background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06)}</style>
+</head>
+<body>
+  <div class="box">
+    <h2>Registrando presença...</h2>
+    <p id="status">Aguarde...</p>
+  </div>
+
+<script>
+const API = 'COLE_AQUI_SUA_URL_DO_APPS_SCRIPT'; // <<< substitua
+const params = new URLSearchParams(location.search);
+const vendedor_id = params.get('vendedor_id');
+
+if(!vendedor_id){
+  document.getElementById('status').textContent = 'Vendedor inválido.';
+} else {
+  // chama a API para salvar presença
+  fetch(`${API}?action=savePresence&vendedor_id=${encodeURIComponent(vendedor_id)}`)
+    .then(r=>r.json())
+    .then(res=>{
+      if(res.ok){
+        document.getElementById('status').textContent = 'Presença registrada com sucesso! ✅';
+      } else {
+        document.getElementById('status').textContent = 'Erro ao registrar: ' + (res.error||'');
+      }
+    })
+    .catch(err=>{
+      document.getElementById('status').textContent = 'Erro de conexão';
+    });
+}
+</script>
+</body>
+</html>

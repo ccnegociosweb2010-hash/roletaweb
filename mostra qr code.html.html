@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Painel do Vendedor</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  body{font-family:Arial;padding:20px;text-align:center}
+  .box{max-width:540px;margin:auto;padding:20px;background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+  #qrcode{margin:12px auto}
+</style>
+</head>
+<body>
+  <div class="box">
+    <h2 id="titulo">Painel</h2>
+    <div id="qrcode"></div>
+    <p>Peça ao responsável para escanear este QR no totem/TV — ao escanear sua presença será registrada.</p>
+    <p><button onclick="abrirRegistrar()">Abrir link de registro</button></p>
+    <p id="msg" style="color:green"></p>
+  </div>
+
+<script>
+const API = 'COLE_AQUI_SUA_URL_DO_APPS_SCRIPT'; // <<< substitua
+const params = new URLSearchParams(location.search);
+const vendedor_id = params.get('vendedor_id');
+const nome = params.get('nome') || '';
+
+document.getElementById('titulo').textContent = 'Bem-vindo, ' + (nome || '');
+
+if(!vendedor_id){ document.getElementById('msg').textContent = 'Vendedor ID ausente. Faça login.'; }
+
+// Link que o QR vai apontar (página pública que grava a presença)
+const registrarPage = location.origin + location.pathname.replace(/[^/]*$/,'') + 'registrar.html?vendedor_id=' + encodeURIComponent(vendedor_id);
+
+// gera QR
+new QRCode(document.getElementById('qrcode'), { text: registrarPage, width: 220, height: 220 });
+
+function abrirRegistrar(){
+  window.open(registrarPage, '_blank');
+}
+</script>
+</body>
+</html>

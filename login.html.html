@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Login Vendedor</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  body{font-family:Arial;padding:20px}
+  .box{max-width:420px;margin:auto;background:#fff;padding:18px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+  input,button{width:100%;padding:12px;margin:8px 0;font-size:16px}
+</style>
+</head>
+<body>
+  <div class="box">
+    <h2>Login Vendedor</h2>
+    <input id="email" type="email" placeholder="seu@email.com">
+    <input id="senha" type="password" placeholder="Senha">
+    <button onclick="fazerLogin()">Entrar</button>
+    <p id="msg" style="color:red"></p>
+  </div>
+
+<script>
+const API = 'COLE_AQUI_SUA_URL_DO_APPS_SCRIPT'; // <<< substitua
+
+async function fazerLogin(){
+  const email = document.getElementById('email').value.trim();
+  const senha = document.getElementById('senha').value.trim();
+  if(!email||!senha){ document.getElementById('msg').textContent='Preencha email e senha'; return; }
+  const url = `${API}?action=login&email=${encodeURIComponent(email)}&senha=${encodeURIComponent(senha)}`;
+  const res = await fetch(url).then(r=>r.json()).catch(e=>({ok:false, error:'Erro de conexão'}));
+  if(res.ok){
+    // redireciona para painel passando id e nome
+    const id = res.vendedor.id;
+    window.location = `painel.html?vendedor_id=${encodeURIComponent(id)}&nome=${encodeURIComponent(res.vendedor.nome)}`;
+  } else {
+    document.getElementById('msg').textContent = res.error || 'Erro login';
+  }
+}
+</script>
+</body>
+</html>
